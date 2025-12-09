@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Constructing a Fact-Checking ADIC Layer for the "Classics Obsolescence" Discourse</title>
+
+<!-- Fonts: Noto Serif (Body), Noto Sans (Headings), Fira Code (Code) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Noto+Sans:wght@400;500;700&family=Noto+Serif:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- MathJax Configuration -->
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    macros: {
+      Re: "\\operatorname{Re}",
+      Im: "\\operatorname{Im}",
+      Li: "\\operatorname{Li}",
+      C: "\\mathbb{C}",
+      R: "\\mathbb{R}",
+      Z: "\\mathbb{Z}",
+      N: "\\mathbb{N}",
+      Q: "\\mathbb{Q}"
+    },
+    tags: 'ams'
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root {
+  /* Design Tokens */
+  --font-serif: "Noto Serif", "Times New Roman", serif;
+  --font-sans: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-code: "Fira Code", "Consolas", monospace;
+
+  --color-bg: #ffffff;
+  --color-text: #2c2c2c;
+  --color-accent: #003366; /* Deep Academic Blue */
+  --color-border: #e0e0e0;
+  --color-bg-light: #f8f9fa;
+  --color-theorem-bg: #fdfdfe;
+  --color-theorem-border: #003366;
+
+  --spacing-section: 3.5rem;
+}
+
+body {
+  font-family: var(--font-serif);
+  line-height: 1.8;
+  color: var(--color-text);
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  background-color: var(--color-bg);
+  text-align: justify;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: break-word;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  color: #111;
+  line-height: 1.3;
+}
+
+h1 {
+  font-weight: 700;
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.phrase {
+  display: inline-block;
+  white-space: normal;
+}
+
+h1 small {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 0.8rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+h2 {
+  font-weight: 700;
+  margin-top: var(--spacing-section);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #333;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  color: var(--color-accent);
+}
+
+h4 {
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 1.0rem;
+    color: #444;
+}
+
+.author {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  color: #444;
+  font-family: var(--font-sans);
+  font-weight: 500;
+}
+
+p {
+  margin-bottom: 1.5rem;
+  text-indent: 0;
+}
+
+/* Context Box for International Readers */
+.context-box {
+    margin: 0 0 2rem 0;
+    padding: 1.5rem;
+    background-color: #f4f6f9;
+    border-left: 5px solid #555;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.context-title {
+    font-weight: bold;
+    font-family: var(--font-sans);
+    color: #333;
+    display: block;
+    margin-bottom: 0.8rem;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Abstract Box */
+.abstract {
+    margin: 0 2rem 3rem 2rem;
+    padding: 1.5rem;
+    background-color: #fcfcfc;
+    border: 1px solid #eee;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    font-style: italic;
+    color: #444;
+}
+.abstract-title {
+    font-weight: bold;
+    font-family: var(--font-sans);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-style: normal;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: #222;
+}
+
+/* Theorem Environments */
+.theorem, .lemma, .definition, .corollary, .remark, .claim-box {
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background-color: var(--color-theorem-bg);
+  border-left: 4px solid var(--color-theorem-border);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.definition { border-left-color: #28a745; --color-theorem-bg: #f9fff9; }
+.remark { border-left-color: #6c757d; --color-theorem-bg: #f8f9fa; }
+.claim-box { border-left-color: #dc3545; --color-theorem-bg: #fff5f5; }
+
+.theorem-title {
+  font-weight: 700;
+  font-family: var(--font-sans);
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+/* Tables with Scroll Hint */
+.table-container {
+    overflow-x: auto;
+    margin: 2rem 0;
+    -webkit-overflow-scrolling: touch;
+    background:
+        linear-gradient(to right, white 30%, rgba(255,255,255,0)),
+        linear-gradient(to right, rgba(255,255,255,0), white 70%) 0 100%,
+        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,.2), rgba(0,0,0,0)),
+        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: white;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-position: 0 0, 100% 0, 0 0, 100% 0;
+    background-attachment: local, local, scroll, scroll;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+th, td {
+  border: 1px solid var(--color-border);
+  padding: 0.7rem 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f0f4f8;
+  font-weight: 700;
+  color: var(--color-accent);
+  border-bottom: 2px solid #ccc;
+}
+tr:nth-child(even) {
+  background-color: #fcfcfc;
+}
+caption {
+    font-family: var(--font-sans);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-align: left;
+    color: #555;
+    font-size: 0.95rem;
+}
+
+/* Code Blocks */
+pre {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 1.5rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+code {
+  font-family: var(--font-code);
+}
+p code, li code {
+  color: #c7254e;
+  background-color: #f9f2f4;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+pre code {
+  color: inherit;
+  background-color: transparent;
+  padding: 0;
+}
+
+/* MathJax Adjustments */
+.mjx-chtml { font-size: 110% !important; }
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding: 0.5rem 0;
+  margin: 1rem 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Footer */
+.qed {
+  text-align: right;
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+  font-family: var(--font-sans);
+}
+.qed::after {
+  content: "∎";
+  color: #333;
+  font-size: 1.2em;
+}
+.nav-footer {
+    text-align: center;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+    margin-bottom: 4rem;
+}
+.btn-home {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: #666;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: 0.8rem 2rem;
+    border: 1px solid #ddd;
+    border-radius: 50px;
+    transition: all 0.2s ease;
+    background-color: #fff;
+    font-size: 0.95rem;
+}
+.btn-home:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+ul, ol { margin-bottom: 1.5rem; padding-left: 1.2rem; }
+li { margin-bottom: 0.5rem; }
+
+/* Mobile Optimization */
+@media (max-width: 600px) {
+  body {
+    padding: 2rem 1.2rem;
+    font-size: 1rem;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+  
+  h1 small {
+    font-size: 0.9rem;
+    margin-top: 0.6rem;
+  }
+  
+  h2 {
+    font-size: 1.3rem;
+    margin-top: 2.5rem;
+    border-bottom-width: 1px;
+  }
+  
+  h3 {
+    font-size: 1.15rem;
+  }
+
+  .abstract {
+    margin: 0 0 2.5rem 0;
+    padding: 1.2rem;
+  }
+
+  .theorem, .lemma, .definition, .corollary, .remark, .claim-box, .context-box {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-left-width: 4px;
+  }
+
+  /* Full-width tables on mobile */
+  .table-container {
+    margin: 1.5rem -1.2rem;
+    padding: 0 1.2rem;
+    width: calc(100% + 2.4rem);
+    border: none;
+  }
+  
+  table {
+    font-size: 0.8rem;
+  }
+  
+  th, td {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .mjx-chtml {
+    font-size: 95% !important;
+  }
+  
+  .btn-home {
+    width: 100%;
+    padding: 1rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<h1>
+  <span class="phrase">Constructing a Fact-Checking</span> <span class="phrase">ADIC Layer</span><br>
+  <span class="phrase">for the "Classics Obsolescence" Discourse:</span><br>
+  <small><span class="phrase">Formalizing Refutation Protocols</span> <span class="phrase">via $\Sigma_1$-Type Existential Witnesses</span></small>
+</h1>
+
+<div class="author">Author: GhostDrift Mathematical Institute</div>
+
+<!-- Preface for International Readers -->
+<div class="context-box">
+    <span class="context-title">Preface: The Context of Classical Education in Japan</span>
+    <p>
+        To grasp the full scope of this paper, international readers must understand the unique structure of the Japanese high school curriculum. The subject of "Japanese" (<em>Kokugo</em>) mandates the study of three distinct fields:
+    </p>
+    <ol>
+        <li><strong>Modern Japanese (<em>Gendai-bun</em>):</strong> Contemporary literature and logical writing.</li>
+        <li><strong>Classical Japanese (<em>Kobun</em>):</strong> Literature from the Heian period (approx. 794–1185) onwards.</li>
+        <li><strong>Classical Chinese (<em>Kanbun</em>):</strong> Ancient Chinese texts (often pre-modern) read via a specialized Japanese annotation system (<em>Kundoku</em>) that rearranges the syntax for Japanese speakers.</li>
+    </ol>
+    <p>
+        The "Classics Obsolescence Argument" (<em>Koten Fuyō-ron</em>) is a recurring cultural debate in Japan. Critics argue that the compulsory study of <em>Kobun</em> and <em>Kanbun</em> imposes an excessive time cost on students with negligible practical utility in modern society. This paper attempts to formalize this domestic debate into a verifiable mathematical structure using the ADIC protocol.
+    </p>
+</div>
+
+<div class="abstract">
+    <span class="abstract-title">Abstract</span>
+    This paper proposes a methodology to decouple the "Classics Obsolescence" argument—a prevalent discourse in Japanese education asserting that Classical Japanese and Classical Chinese are unnecessary—from emotional rhetoric, separating it into verifiable finite facts (Fact) and subjective values (Value). By reducing the primary claims of the obsolescence argument to factual propositions concerning "Time Cost," "International Precedents," and "Learning Efficacy," we design an <strong>ADIC (Anti-Doxa Immutable Certificate)</strong> protocol to verify their consistency with existing datasets (Ledgers). Adopting a $\Sigma_1$-type (existential) refutation logic, this protocol aims to mathematically invalidate unfounded societal discourse through the rigorous presentation of finite counter-examples.
+</div>
+
+<h2>1. Introduction: Rendering Invisible Dynamics Observable</h2>
+
+<h3>1.1 Implicit Dynamics in Educational Discourse</h3>
+<p>
+In contemporary educational discourse, the assertion that "classics are useless" often circulates as if it were a self-evident truth, despite a lack of empirical evidence. This phenomenon represents a form of invisible societal pressure that influences decision-making without formal verification. To counter this unsubstantiated discourse, emotional rebuttal is insufficient; what is required is a formal barrier (ADIC) that mathematically decomposes the argument's components and demonstrates their inconsistency with observable facts.
+</p>
+
+<h3>1.2 Purpose of this Study</h3>
+<p>
+The objective of this study is not to prove the absolute value of classical education. Rather, it is to demonstrate, in a computable format, that the "factual assumptions" implicitly premised by the obsolescence argument contradict objective data. This provides a mechanism to filter the debate into "invalid claims based on factual errors" and "pure value judgments."
+</p>
+
+<h2>2. Formulation of the Argument and Claim Types</h2>
+<p>
+From the logs of obsolescence discourse, we extract and define four representative Claim Types. This paper primarily targets <strong>C1</strong> and <strong>C4</strong>, which are readily amenable to objective verification, and treats <strong>C3</strong> as auxiliary.
+</p>
+
+<div class="claim-box">
+<span class="theorem-title">Claim Type C1: Excessive Time Cost</span>
+<div class="theorem-content">
+<ul>
+    <li><strong>Claim:</strong> "High school students are forced to spend an enormous amount of time on classics, squeezing out other subjects."</li>
+    <li><strong>Fact Candidate:</strong> A claim that implies $\text{RequiredHours}_{\text{Classics}} \ge H_0$ for some integer threshold $H_0 > 0$.<br>
+    <em>(Note: Although $H_0=100$ is used for convenience in this paper, refutation is possible for any $H_0 > 70$ given the existence of actual data (70 hours).)</em></li>
+</ul>
+</div>
+</div>
+
+<div class="claim-box">
+<span class="theorem-title">Claim Type C2: Lack of Utility</span>
+<div class="theorem-content">
+<ul>
+    <li><strong>Claim:</strong> "Classics are completely useless in real life."</li>
+    <li><strong>Fact Candidate (C2a):</strong> The statistical proposition that "classical education has no positive correlation or utility in any occupation or career path."</li>
+    <li><strong>Value (C2b):</strong> The value judgment that "education should only pursue modern practicality."<br>
+    <em>(Note: In this paper, C2 is explicitly excluded from ADIC verification. This is due to <strong>principle impossibility</strong>. The concept of "useful/useless" cannot be defined on a finite integer table (Ledger) as an agreeable observable fact, and thus cannot be reduced to a $\Sigma_1$-type existential proof. Therefore, C2 is structurally treated as PureValue rather than Fact.)</em></li>
+</ul>
+</div>
+</div>
+
+<div class="claim-box">
+<span class="theorem-title">Claim Type C3: Zero Effect</span>
+<div class="theorem-content">
+<ul>
+    <li><strong>Claim:</strong> "Studying classics does not contribute to the improvement of reading comprehension or logical thinking skills (Zero Effect)."</li>
+    <li><strong>Fact Candidate:</strong> A claim that assumes, for a fixed rational threshold $\delta_{\mathrm{zero}} > 0$:
+    $$ \forall \text{Study},\ |\text{EffectSize}(\text{Study})| \le \delta_{\mathrm{zero}} $$
+    </li>
+</ul>
+</div>
+</div>
+
+<div class="claim-box">
+<span class="theorem-title">Claim Type C4: International Obsolescence</span>
+<div class="theorem-content">
+<ul>
+    <li><strong>Claim:</strong> "Classical education has already been abolished in advanced foreign countries."</li>
+    <li><strong>Fact Candidate:</strong> A claim that assumes, for a certain non-negative integer threshold $H_{\mathrm{zero}} \ge 0$:
+    $$ \forall \text{Country} \in \text{G7},\ \text{Hours}_{\text{Classics}}(\text{Country}) \le H_{\mathrm{zero}} $$
+    <em>(Note: This paper defines "advanced foreign countries" as the <strong>G7</strong> nations for practical frequency. Trends in non-G7 countries can be handled by extending the Ledger with a separate Claim, e.g., C4'.)</em></li>
+</ul>
+</div>
+</div>
+
+<h3>2.1 Ledger Snapshot Condition (Immutable Snapshot)</h3>
+<p>
+Each Ledger $L_{\mathrm{curr}}, L_{\mathrm{intl}}, L_{\mathrm{study}}$ used in this paper is fixed as a snapshot as of <strong>December 9, 2025</strong>.
+</p>
+<p>
+Raw data (such as <code>jp_curriculum_time_cost</code>) is type-converted as necessary (e.g., mapping "present" to 9999, extracting effect sizes), and the resulting finite sequences are frozen as $L_{\mathrm{curr}}^*, L_{\mathrm{intl}}^*, L_{\mathrm{study}}^*$. The ADIC certificate includes the hash values of these snapshots:
+$$ (\mathrm{Hash}(L_{\mathrm{curr}}^*),\ \mathrm{Hash}(L_{\mathrm{intl}}^*),\ \mathrm{Hash}(L_{\mathrm{study}}^*)) $$
+By publishing this set, the <strong>"set of facts at that point in time"</strong> relied upon by the certificate can be uniquely reproduced regardless of future Ledger updates, guaranteeing third-party verifiability of the $\Sigma_1$-type refutation.
+</p>
+
+<h2>3. Data Layer: ADIC Ledger Specifications</h2>
+<p>
+In this paper, actual datasets are adopted directly as ADIC Ledgers. Each Ledger is a finite matrix where every row is a fully determined record. Note that the purpose of this paper is to present the logical structure of ADIC, not to conduct an exhaustive meta-analysis. Additional data such as PISA data or long-term tracking studies would be processed simply as additional Ledger rows within the ADIC framework, without affecting the structure itself.
+</p>
+
+<h3>3.1 Japan Curriculum Ledger $L_{\mathrm{curr}}$</h3>
+<p>
+The entity of $L_{\mathrm{curr}}$ is the <code>jp_curriculum_time_cost</code> table. Formally, it is implemented as a finite subset of $L_{\mathrm{curr}} \subset \text{ID} \times \mathbb{Z}^3 \times \text{Str}^4 \times \mathbb{Z}^3 \times \text{Str}^2$.
+</p>
+
+<div class="table-container">
+<table>
+  <caption>Fixed Row Schema</caption>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Example</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td>String</td>
+      <td><code>JP_HS_2018_GENGOBUNKA</code></td>
+      <td>Unique ID</td>
+    </tr>
+    <tr>
+      <td><code>period_start/end_year</code></td>
+      <td>Int</td>
+      <td>2018 / 9999</td>
+      <td>Curriculum Period</td>
+    </tr>
+    <tr>
+      <td><code>school_level</code></td>
+      <td>String</td>
+      <td><code>HS</code></td>
+      <td>School Level</td>
+    </tr>
+    <tr>
+      <td><code>subject_name</code></td>
+      <td>String</td>
+      <td><code>Gengo Bunka</code></td>
+      <td>Subject Name</td>
+    </tr>
+    <tr>
+      <td><code>required_or_elective</code></td>
+      <td>Enum</td>
+      <td><code>Required</code></td>
+      <td><code>{Required, Elective}</code></td>
+    </tr>
+    <tr>
+      <td><code>total_hours</code></td>
+      <td>Int</td>
+      <td>70</td>
+      <td>Standard Total Hours</td>
+    </tr>
+    <tr>
+      <td><code>source_info</code></td>
+      <td>String</td>
+      <td>MEXT Q&A...</td>
+      <td>Source Info</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>
+<em>(Definition)</em> For formalization, we introduce the following abbreviation:
+$$ \text{IsRequired}(r) := 1 \iff r.\text{required\_or\_elective} = \text{"Required"}, \quad \text{otherwise } 0 $$
+</p>
+
+<h3>3.2 International Curriculum Ledger $L_{\mathrm{intl}}$</h3>
+<p>
+The entity of $L_{\mathrm{intl}}$ is the <code>intl_curriculum_time_cost</code> table.
+</p>
+<div class="table-container">
+<table>
+  <caption>Row Schema</caption>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>id</code></td>
+      <td>String</td>
+      <td><code>UK_GCSE_2016_LATIN</code></td>
+    </tr>
+    <tr>
+      <td><code>country</code></td>
+      <td>String</td>
+      <td><code>UK</code></td>
+    </tr>
+    <tr>
+      <td><code>total_hours</code></td>
+      <td>Int</td>
+      <td>130</td>
+    </tr>
+    <tr>
+      <td><code>subject_name</code></td>
+      <td>String</td>
+      <td><code>GCSE Latin course</code></td>
+    </tr>
+    <tr>
+      <td><code>source_info</code></td>
+      <td>String</td>
+      <td>OCR Spec 2016...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h3>3.3 Study Effect Ledger $L_{\mathrm{study}}$</h3>
+<p>
+The entity of $L_{\mathrm{study}}$ is the <code>study_effects_classics</code> table. It is mechanically collected based on search criteria and includes positive, neutral, and negative results.
+</p>
+<div class="table-container">
+<table>
+  <caption>Row Schema (Includes Bias Risk Indicators)</caption>
+  <thead>
+    <tr>
+      <th>Field Name</th>
+      <th>Type</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>study_id</code></td>
+      <td>String</td>
+      <td><code>HAUSPIE_2024_LATIN_GPA</code></td>
+    </tr>
+    <tr>
+      <td><code>design_type</code></td>
+      <td>String</td>
+      <td><code>cross_sectional</code></td>
+    </tr>
+    <tr>
+      <td><code>n</code></td>
+      <td>Int</td>
+      <td>631</td>
+    </tr>
+    <tr>
+      <td><code>preregistered</code></td>
+      <td>Int</td>
+      <td>0 or 1</td>
+    </tr>
+    <tr>
+      <td><code>risk_of_bias</code></td>
+      <td>Enum</td>
+      <td><code>{low, medium, high}</code></td>
+    </tr>
+    <tr>
+      <td><code>effect_size</code></td>
+      <td>String</td>
+      <td><code>Cohen's d = 0.36</code></td>
+    </tr>
+    <tr>
+      <td><code>effect_direction</code></td>
+      <td>Enum</td>
+      <td><code>{positive, negative, mixed, 0}</code></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>
+As a countermeasure against p-hacking, the logical sign function <code>EffectSign</code> is rigorously defined using fields such as <code>effect_direction</code> and <code>risk_of_bias</code>:
+$$
+\text{EffectSign}(r) :=
+\begin{cases}
++1 & \text{if } \hat d > \delta_{\min} \land \text{significant} \land \text{risk\_of\_bias} \neq \text{high} \\
+-1 & \text{if } \hat d < -\delta_{\min} \land \text{significant} \land \text{risk\_of\_bias} \neq \text{high} \\
+0  & \text{otherwise}
+\end{cases}
+$$
+</p>
+
+<h2>4. Logical Structure and $\Sigma_1$-Type Verification</h2>
+<p>
+The core of ADIC is to refute the universal fact claims contained in the obsolescence argument using <strong>$\Sigma_1$-type (existential)</strong> propositions. Since the negation of a universal proposition is an existential proposition, it is established by presenting a single counter-example (Witness), making the verification cost low and logically robust.
+</p>
+
+<h3>4.1–4.3 Formulation of Refutation Propositions</h3>
+<div class="definition">
+<span class="theorem-title">Definition 4.1 (Refutation Propositions).</span>
+<div class="theorem-content">
+For each obsolescence argument $P$, the refutation proposition $R$ is defined as follows:
+<ul>
+    <li><strong>C1 (Time Cost)</strong>:
+    $$ P_{\mathrm{C1}}(H_0) \implies R_{\mathrm{C1}}(H_0) := \exists r \in L_{\mathrm{curr}} \text{ s.t. } (\text{IsRequired}(r) = 1 \land r.\text{TotalHours} < H_0) $$</li>
+    <li><strong>C4 (International)</strong>:
+    $$ P_{\mathrm{C4}}(H_{\mathrm{zero}}) \implies R_{\mathrm{C4}}(H_{\mathrm{zero}}) := \exists r \in L_{\mathrm{intl}} \text{ s.t. } r.\text{TotalHours} > H_{\mathrm{zero}} $$</li>
+    <li><strong>C3 (No Effect)</strong>:
+    $$ P_{\mathrm{C3}} \implies R_{\mathrm{C3}} := \exists r \in L_{\mathrm{study}} \text{ s.t. } (\text{EffectSign}(r) \neq 0) $$</li>
+</ul>
+</div>
+</div>
+
+<h3>4.4 Definition of $\Sigma_1$-Type Verify Functions</h3>
+<p>
+We define primitive recursive functions (pseudo-code) to check each refutation proposition.
+</p>
+
+<h4>4.4.1 Verify Function for C1</h4>
+<pre><code class="language-python">function Verify_C1(H0, L_curr):
+    for i from 0 to len(L_curr) - 1:
+        r := L_curr[i]
+        # required_or_elective="Required" corresponds to IsRequired(r)=1 by definition
+        if (r.required_or_elective == "Required") and (r.total_hours < H0): return r
+    return ⊥</code></pre>
+
+<h4>4.4.2 Verify Function for C4</h4>
+<pre><code class="language-python">function Verify_C4(H_zero, L_intl):
+    for i from 0 to len(L_intl) - 1:
+        r := L_intl[i]
+        if r.total_hours > H_zero: return r
+    return ⊥</code></pre>
+
+<h4>4.4.3 Verify Function for C3</h4>
+<pre><code class="language-python">function Verify_C3(L_study):
+    for i from 0 to len(L_study) - 1:
+        r := L_study[i]
+        # effect_direction ≠ "0" corresponds to EffectSign(r) ≠ 0 by definition
+        if r.effect_direction != "0": return r
+    return ⊥</code></pre>
+<p>
+<em>(Note: This function halts as soon as it discovers one row satisfying the refutation condition.)</em>
+</p>
+
+<h3>4.5 Mini-ADIC Ledger: Representative Witness Examples</h3>
+
+<p>
+The table below extracts representative witness rows from the three Ledgers used in this paper to refute C1, C4, and C3 respectively.<br>
+<em>
+(Note: The following 3 rows (Gengo Bunka 70h / IB Latin HL 240h / Hauspie 2024 d=0.36) are <strong>real data</strong> extracted directly from the corresponding rows of the Ledger (CSV/Spreadsheet) used in this paper.
+The primary sources for the original data are, in order:
+Ministry of Education, Culture, Sports, Science and Technology (MEXT) "Q&amp;A regarding the 2018 Revision of the High School Curriculum Guidelines (Japanese Language)" <a href="https://www.mext.go.jp/content/1422366_001.pdf" target="_blank" rel="noopener">(PDF)</a>,
+International Baccalaureate Organization "IB Diploma Programme Guide" (2019),
+and Hauspie et al. "Hauspie et al. (in press, Language Learning)".
+URLs for the IB and Hauspie primary papers are omitted here in accordance with publishing policies, providing bibliographic information only.
+)</em></p>
+
+<div class="table-container">
+<table>
+  <caption>Table 4.5 Representative Witness Rows in Mini-ADIC Ledger</caption>
+  <thead>
+    <tr>
+      <th>Ledger</th>
+      <th>ClaimType</th>
+      <th>id</th>
+      <th>Country/Cat.</th>
+      <th>Subject / Study</th>
+      <th>Key Metrics</th>
+      <th>$\Sigma_1$ Witness Label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$L_{\mathrm{curr}}$</td>
+      <td>C1</td>
+      <td><code>JP_HS_...</code></td>
+      <td>Japan / HS</td>
+      <td>Gengo Bunka (Required)</td>
+      <td><code>total_hours = 70</code></td>
+      <td>$\Sigma_1$-witness for $R_{\mathrm{C1}}(100)$</td>
+    </tr>
+    <tr>
+      <td>$L_{\mathrm{intl}}$</td>
+      <td>C4</td>
+      <td><code>IB_DP_LATIN</code></td>
+      <td>IB / DP</td>
+      <td>IB Latin HL</td>
+      <td><code>total_hours = 240</code></td>
+      <td>$\Sigma_1$-witness for $R_{\mathrm{C4}}(0)$</td>
+    </tr>
+    <tr>
+      <td>$L_{\mathrm{study}}$</td>
+      <td>C3</td>
+      <td><code>HAUSPIE_2024</code></td>
+      <td>Belgium</td>
+      <td>Latin Effect (GPA)</td>
+      <td>$d=0.36$, $p<.001$</td>
+      <td>$\Sigma_1$-witness for $R_{\mathrm{C3}}$</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<h2>5. Decision Process for ADIC Status</h2>
+<p>
+The following algorithm assigns a status to any obsolescence claim $C$.
+</p>
+<ol>
+    <li><strong>Decomposition</strong>: $C \to (\text{Fact } F, \text{Value } V)$</li>
+    <li><strong>Matching</strong>: Determine if $F$ falls under $\{P_{\mathrm{C1}}, P_{\mathrm{C4}}, P_{\mathrm{C3}}\}$.</li>
+    <li><strong>Witness Search</strong>: If matched, search for a witness $w$ from Ledger $L^\star$.</li>
+    <li><strong>Judgment</strong>:
+        <ul>
+            <li><strong>Refuted_by_Data</strong>: Witness $w$ found ($\Sigma_1$ proof).</li>
+            <li><strong>Unsupported</strong>: $F$ exists but no witness found (undetermined).</li>
+            <li><strong>PureValue</strong>: No meaningful $F$ (subjective only).</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>5.1 ADIC Certificate Object</h3>
+<p>
+An ADIC Certificate is defined as a finite-length record (e.g., JSON) with the following fields:
+</p>
+<pre><code>{
+  "claim_type": "C1_TimeCost",
+  "status": "Refuted_by_Data",
+  "ledger_hashes": [ "Hash(L_curr*)", ... ],
+  "verify_fn": "Verify_C1",
+  "verify_params": { "H0": 100 },
+  "witness_pointer": { "ledger": "L_curr", "row_id": "JP_HS_..." }
+}</code></pre>
+
+<h2>6. $\Sigma_1$ Certificates at the Arithmetic Level</h2>
+<p>
+In this section, we rigorously define constants and encoding to complete the ADIC system within the language of <strong>Peano Arithmetic (PA)</strong>.
+</p>
+
+<h3>6.1 Fixing Constants and Sensitivity Analysis</h3>
+<p>
+We fix the following constants at the arithmetic level:
+$$ H_0 := 100,\qquad H_{\mathrm{zero}} := 0,\qquad \delta_{\mathrm{zero}} := \frac{1}{3}. $$
+These values are examples of formalizing the obsolescence argument, and the protocol is <strong>parametric</strong> with respect to these constants. Given the existence of real data (e.g., Gengo Bunka 70 hours, Hauspie effect size 0.36), the refutation proposition holds true for any $H_0 > 70$ or $0 < \delta < 0.36$. In other words, sensitivity analysis shows that this protocol is robust and does not rely on specific constant settings.
+</p>
+
+<h3>6.2 Encoding and $\Sigma_1$ Form</h3>
+<p>
+Ledger $L^*$ is a finite sequence and can be uniquely encoded as a natural number $N \in \mathbb{N}$. Specifically, we adopt the Gödel numbering of finite sequences $\langle x_0, \dots, x_k \rangle$ extending the standard Cantor pairing function $\langle x, y \rangle := (x+y)(x+y+1)/2 + y$.
+</p>
+<p>
+At this time, the refutation propositions $R_{\mathrm{C*}}$ are described using primitive recursive predicates $\theta_{\mathrm{C*}}$ as follows:
+</p>
+<ul>
+    <li>$R_{\mathrm{C1}} \equiv \exists i\ \theta_{\mathrm{C1}}(i)$</li>
+    <li>$R_{\mathrm{C4}} \equiv \exists j\ \theta_{\mathrm{C4}}(j)$</li>
+    <li>$R_{\mathrm{C3}} \equiv \exists k\ \theta_{\mathrm{C3}}(k)$</li>
+</ul>
+
+<h3>6.3 Implementation Scalability and Proof-Theoretic Strength</h3>
+<p>
+In implementation, structuring the Ledger as a Merkle Tree suppresses verification computational complexity to $O(\log N)$ and enables Partial Verification.
+Logically, since the Verify functions and predicates $\theta_{\mathrm{C*}}$ consist only of bounded quantification and basic arithmetic operations, this system can be fully formulated within <strong>PRA (Primitive Recursive Arithmetic)</strong> or $I\Delta_0$. This implies that ADIC operates on an extremely reliable logical foundation.
+</p>
+
+<h3>6.4 Data Sources (Examples of Primary Materials)</h3>
+<p>
+The sources for the major rows used for specific numerical values in this paper are generally as follows.
+</p>
+<ul>
+  <li>
+    Japanese High School "Gengo Bunka" (Language Culture) 2 credits = 70 hours:
+    Ministry of Education, Culture, Sports, Science and Technology (MEXT),
+    "Q&amp;A regarding the 2018 Revision of the High School Curriculum Guidelines (Japanese Language)",
+    2018,
+    <a href="https://www.mext.go.jp/content/1422366_001.pdf" target="_blank" rel="noopener">
+      https://www.mext.go.jp/content/1422366_001.pdf
+    </a>.
+  </li>
+  <li>
+    International Baccalaureate IB Latin HL 240 hours:
+    International Baccalaureate Organization,
+    "IB Diploma Programme Guide", 2019. (Published on the official IB website.)
+  </li>
+  <li>
+    Difference in university GPA between Latin and non-Latin learners d = 0.36:
+    Hauspie, C. et al.,
+    "Hauspie et al. (in press, Language Learning)",
+    Language Learning, 2024 (in press).
+  </li>
+</ul>
+<p>
+All these sources are embedded as <code>source_title</code> / <code>source_url</code> columns on the Ledger side, allowing readers to trace them directly from the Ledger file (CSV) as needed.
+</p>
+
+<h2>7. Conclusion and Outlook</h2>
+<p>
+This paper proposed the ADIC layer, which reduces the complex societal phenomenon of the "Classics Obsolescence" argument to a computable logical problem. The $\Sigma_1$-type refutation approach eliminates barren disputes and instantly filters "factual errors."
+</p>
+<p>
+From a sociomathematical perspective, this system serves as a formal mechanism to seal the power exerted by unsubstantiated discourse on the real world using the wedge of data. As the Ledger expands, the active area of invalid claims (Unsupported region) is expected to shrink asymptotically.
+</p>
+
+<div class="qed"></div>
+
+<!-- Navigation Footer -->
+<div class="nav-footer">
+    <a href="https://medium.com/@hide.pollini.kenkou" class="btn-home">
+        <span>←</span> Return to Institute Home
+    </a>
+</div>
+
+</body>
+</html>
