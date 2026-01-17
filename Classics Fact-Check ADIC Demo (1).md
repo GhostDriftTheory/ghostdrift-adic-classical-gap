@@ -6,7 +6,7 @@
 
 This project is part of the **AI Safety & AI Accountability Project**, extending **Responsibility Engineering** to the domain of societal discourse. It demonstrates how to decouple emotional rhetoric from verifiable facts using the **ADIC (Anti-Doxa Immutable Certificate)** protocol.
 
-[**🌐 View Research Paper Demo**](https://www.google.com/search?q=https://ghostdrifttheory.github.io/classics-factcheck-adic-demo/) *(Placeholder URL)*
+[[**🌐 View Research Paper Demo**] ](https://ghostdrifttheory.github.io/ghostdrift-adic-classical-gap/)
 
 ## **📖 Overview**
 
@@ -52,7 +52,7 @@ Source: GhostDrift Mathematical Research Project
 Project: ADIC Fact-Checking Layer (Classics Obsolescence Discourse)  
 Concept: Sociomathematical Responsibility Engineering  
 Institution: GhostDrift Mathematical Research Institute (ゴーストドリフト数理研究所)  
-URL: https://ghostdrifttheory.github.io/classics-factcheck-adic-demo/
+URL: [https://ghostdrifttheory.github.io/ghostdrift-adic-classical-gap/](https://ghostdrifttheory.github.io/ghostdrift-adic-classical-gap/)
 
 ## **🛡️ License & Patent Notice**
 
